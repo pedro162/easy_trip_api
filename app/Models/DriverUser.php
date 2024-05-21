@@ -13,7 +13,4 @@ use App\Models\Intefaces\UserInterface;
 class DriverUser extends User implements UserInterface
 {
 
-    public function account(){
-        return $this->hasMany(BankAccount::class, 'user_id', 'id');
-    }
 }

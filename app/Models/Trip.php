@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ClientUser;
 use App\Models\DriverUser;
+use App\Models\User;
 use App\Models\Intefaces\UserInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -31,11 +32,11 @@ class Trip extends Model
     ];
 
     public function driver(){
-    	return $this->belongsTo(DriverUser::class, 'driver_id', 'id');
+    	return $this->belongsTo(User::class, 'driver_id', 'id');
     }
 
     public function client(){
-    	return $this->belongsTo(ClientUser::class, 'client_id', 'id');
+    	return $this->belongsTo(User::class, 'client_id', 'id');
     }
 
 

@@ -76,4 +76,8 @@ class User extends Authenticatable
     public function tripAsCustomer(){
         return $this->hasMany(Trip::class, 'client_id', 'id');
     }
+
+    public function account(){
+        return $this->hasMany(BankAccount::class, 'user_id', 'id');
+    }
 }
