@@ -301,7 +301,7 @@ class UserBuilder extends Builder{
 
             \DB::commit();
 
-            $dataToReturn['data']   = 'Store removed successfully';
+            $dataToReturn['data']   = 'User removed successfully';
             $dataToReturn['state']  = true;
 
         } catch (StoreException $e) {

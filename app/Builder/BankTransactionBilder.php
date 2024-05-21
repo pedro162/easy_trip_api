@@ -3,15 +3,15 @@
 namespace App\Builder;
 
 use Illuminate\Http\Request;
-use App\Domain\TripPaymentRequestDomain;
-use App\Domain\BanckAccountDomain;
-use App\Exceptions\TripPaymentRequestException;
+use App\Domain\BanckTransactionDomain;
+use App\Exceptions\BankTransactionException;
 use App\Http\Controllers\Controller;
 
-class TripPaymentRequestBuilder extends Builder{
+class BankTransactionBilder extends Builder{
 	
-	/**
-	* Load a list of trip payment request
+	
+    /**
+	* Load a bank transaction list
 	*
 	* @return array The result of the processing.
 	*/
@@ -23,8 +23,8 @@ class TripPaymentRequestBuilder extends Builder{
 
             \DB::beginTransaction();
             
-            $storeDomainObj = new TripPaymentRequestDomain();
-            $response = $storeDomainObj->index();
+            $tripDomainObj	= new BanckTransactionDomain();
+            $response 		= $tripDomainObj->index();
 
             \DB::commit();
 
@@ -36,12 +36,11 @@ class TripPaymentRequestBuilder extends Builder{
             $this->setHttpResponseData($response);
             $this->setHttpResponseState(true);
 
-        } catch (TripPaymentRequestException $e) {
+        } catch (BankTransactionException $e) {
 
             \DB::rollback();
 
-            $msg  = $e->getMessage();
-            
+            $msg  = $e->getMessage();            
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 400;
@@ -51,7 +50,6 @@ class TripPaymentRequestBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
-
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 500;
@@ -72,7 +70,7 @@ class TripPaymentRequestBuilder extends Builder{
     }
 
     /**
-	* Create a new trip payment request
+	* Create a new bank transaction
 	*
 	* @param Request $request An instance of the HTTP request class.
 	* @return array The result of the processing.
@@ -85,9 +83,9 @@ class TripPaymentRequestBuilder extends Builder{
 
             \DB::beginTransaction();
 
-            $data 			= $request->all();
-            $storeDomainObj = new TripPaymentRequestDomain();
-            $response 		= $storeDomainObj->create($data);
+            $data = $request->all();
+            $tripDomainObj = new BanckTransactionDomain();
+            $response = $tripDomainObj->create($data);
             
             \DB::commit();
 
@@ -95,7 +93,7 @@ class TripPaymentRequestBuilder extends Builder{
             $this->setHttpResponseState(true);
             $stCod = 201;
 
-        } catch (TripPaymentRequestException $e) {
+        } catch (BankTransactionException $e) {
 
             \DB::rollback();
 
@@ -131,9 +129,9 @@ class TripPaymentRequestBuilder extends Builder{
 
 
     /**
-	* Load the specified trip ṕayment request
+	* Load the specified bank transaction
 	*
-	* @param string $id The trip payment request ID.
+	* @param string $id The bank transaction ID.
 	* @return array The result of the processing.
 	*/
     public function show(string $id):array
@@ -144,8 +142,8 @@ class TripPaymentRequestBuilder extends Builder{
 
             \DB::beginTransaction();
 
-            $storeDomainObj = new TripPaymentRequestDomain();
-            $response = $storeDomainObj->show($id);
+            $tripDomainObj = new BanckTransactionDomain();
+            $response = $tripDomainObj->show($id);
 
             \DB::commit();
 
@@ -161,12 +159,11 @@ class TripPaymentRequestBuilder extends Builder{
             $this->setHttpResponseData($response);
             $this->setHttpResponseState(true);
 
-        } catch (TripPaymentRequestException $e) {
+        } catch (BankTransactionException $e) {
 
             \DB::rollback();
 
-            $msg  = $e->getMessage();
-            
+            $msg  = $e->getMessage();            
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 400;
@@ -176,7 +173,6 @@ class TripPaymentRequestBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
-
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 500;
@@ -186,7 +182,6 @@ class TripPaymentRequestBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
-
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 500;
@@ -200,10 +195,10 @@ class TripPaymentRequestBuilder extends Builder{
 
 
     /**
-	* Update the specified trip payment request
+	* Update the specified bank transaction
 	*
 	* @param Request $request An instance of the HTTP request class.
-	* @param string $id The trip payment request ID.
+	* @param string $id The bank transaction ID.
 	* @return array The result of the processing.
 	*/
     public function update(Request $request, string $id):array
@@ -215,15 +210,15 @@ class TripPaymentRequestBuilder extends Builder{
             \DB::beginTransaction();
 
             $data 			= $request->all(); 
-            $storeDomainObj = new TripPaymentRequestDomain();
-            $response       = $storeDomainObj->update($id, $data);
+            $tripDomainObj  = new BanckTransactionDomain();
+            $response       = $tripDomainObj->update($id, $data);
 
             \DB::commit();
 
             $this->setHttpResponseData($response);
             $this->setHttpResponseState(true);
 
-        } catch (TripPaymentRequestException $e) {
+        } catch (BankTransactionException $e) {
 
             \DB::rollback();
 
@@ -238,6 +233,7 @@ class TripPaymentRequestBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
+
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 500;
@@ -260,9 +256,9 @@ class TripPaymentRequestBuilder extends Builder{
 
 
     /**
-	* Delete the specified trip payment request
+	* Delete the specified bank transaction
 	*
-	* @param string $id The trip payment request ID.
+	* @param string $id The bank transaction ID.
 	* @return array The result of the processing.
 	*/
     public function destroy(string $id):array
@@ -273,32 +269,32 @@ class TripPaymentRequestBuilder extends Builder{
 
             \DB::beginTransaction();
             
-            $storeDomainObj = new TripPaymentRequestDomain();
-            $response       = $storeDomainObj->destroy($id);
+            $tripDomainObj  = new BanckTransactionDomain();
+            $response       = $tripDomainObj->destroy($id);
 
             \DB::commit();
 
-            $msg   = 'Trip payment request removed successfully';
+            $msg   = 'Bank transaction removed successfully';
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(true);
 
-        } catch (TripPaymentRequestException $e) {
+        } catch (BankTransactionException $e) {
 
             \DB::rollback();
 
             $msg  = $e->getMessage();            
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
-            $stCod = 400;
+            $stCod 					= 400;
 
         }catch (\Exception $e) {
 
             \DB::rollback();
 
-            $msg = $e->getMessage();
+            $msg  = $e->getMessage();
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
-            $stCod = 500;
+            $stCod 					= 500;
 
         }catch (\Error $e) {
 
@@ -308,79 +304,6 @@ class TripPaymentRequestBuilder extends Builder{
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod 					= 500;
-            
-        }
-
-        $this->setHttpResponseCode($stCod);
-        return $this->getHttpDataResponseRequest();
-    }
-
-
-    /**
-	* Authorize the specified trip payment request
-	*
-	* @param Request $request An instance of the HTTP request class.
-	* @param string $id The trip payment request ID.
-	* @return array The result of the processing.
-	*/
-    public function authorizePaymentRequest(Request $request, string $id):array
-    {
-        $stCod = 200;
-
-        try {
-
-            \DB::beginTransaction();
-
-            $data = $request->all();            
-            
-            $storeDomainObj 		= new TripPaymentRequestDomain();
-            $tripRequestObj 		= $storeDomainObj->authorizePaymentRequest($id);
-            $tripObj 				= $tripRequestObj->trip();
-            $userBenefitObj 		= $tripRequestObj->beneficUser();
-            $tripDriverObj			= $tripObj->driver();
-            $tripClientObj			= $tripObj->client();
-
-            if($userBenefitObj->id == $tripDriverObj->id){
-            	//'driver', 'customer'
-            	$driverAccountObj 	= $tripDriverObj->account();
-            	$bkAccountDomain 	= new BanckAccountDomain();
-            	$bkAccountDomain->makeTransaction($driverAccountObj, $tripRequestObj, 'credit');
-
-            }elseif($userBenefitObj->id == $tripClientObj->id){
-            	//Cliente Bonification
-            }
-
-            \DB::commit();
-
-            $this->setHttpResponseData($tripRequestObj);
-            $this->setHttpResponseState(true);
-
-        } catch (TripPaymentRequestException $e) {
-
-            \DB::rollback();
-
-            $msg  = $e->getMessage();            
-            $this->setHttpResponseData($msg);
-            $this->setHttpResponseState(false);
-            $stCod = 400;
-
-        }catch (\Exception $e) {
-
-            \DB::rollback();
-
-            $msg  = $e->getMessage();
-            $this->setHttpResponseData($msg);
-            $this->setHttpResponseState(false);
-            $stCod = 500;
-
-        }catch (\Error $e) {
-
-            \DB::rollback();
-
-            $msg  = $e->getMessage();
-            $this->setHttpResponseData($msg);
-            $this->setHttpResponseState(false);
-            $stCod = 500;
             
         }
 
