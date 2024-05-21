@@ -8,13 +8,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use App\Models\User;
+use App\Models\Intefaces\UserInterface;
 
-class DriverUser extends User
+class DriverUser extends User implements UserInterface
 {
-   
-    public function trip(){
-        return $this->hasMany(Trip::class, 'driver_id', 'id');
-    }
 
     public function account(){
         return $this->hasMany(BankAccount::class, 'user_id', 'id');

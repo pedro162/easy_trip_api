@@ -47,6 +47,24 @@ class UserController extends Controller
         return response()->json($dataToReturn, $httpResposeCode);
     }
 
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function storeDriver(Request $request)
+    {
+        
+        $objBuilder         = new UserBuilder();
+        $dataToReturn       = $objBuilder->storeDriver($request);
+
+        $httpResposeCode = $objBuilder->getHttpResponseCode();
+        if(!$httpResposeCode){
+            $httpResposeCode = 200;
+        }
+
+        return response()->json($dataToReturn, $httpResposeCode);
+    }
+
     /**
      * Display the specified resource.
      */

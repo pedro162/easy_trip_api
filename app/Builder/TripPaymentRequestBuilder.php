@@ -68,7 +68,7 @@ class TripPaymentRequestBuilder extends Builder{
         
         $this->setHttpResponseCode($stCod);
 
-        return $dataToReturn;
+        return $this->getHttpDataResponseRequest();
     }
 
     /**

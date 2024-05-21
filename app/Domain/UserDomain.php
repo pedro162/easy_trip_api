@@ -11,6 +11,7 @@ use App\Validators\UserValidator;
 class UserDomain{
 
 	protected bool $canLogin;
+	protected bool $isDriver;
 
 	public function setCanLogin(bool $canLogin){
 		$this->canLogin = $canLogin;
@@ -19,6 +20,15 @@ class UserDomain{
 
 	public function getCanLogin(){
 		return $this->canLogin;
+	}
+
+	public function setIsDriver(bool $isDriver){
+		$this->isDriver = $isDriver;
+	}
+
+
+	public function getIsDriver(){
+		return $this->isDriver;
 	}
 
 	public function index(){
@@ -30,12 +40,16 @@ class UserDomain{
 			'name'			=>$data['name'],
 			'email'			=>$data['email'],
 			'password'		=>bcrypt($data['password']),
-			'user_type'		=>$data['user_type'] 		?? null,
 	        'license_plate'	=>$data['license_plate'] 	?? null,
 	        'driver_rate'	=>$data['driver_rate'] 		?? null,
 	        'customer_rate'	=>$data['customer_rate'] 	?? null,
 		];
 
+		if($this->getIsDriver()){
+			$dataToStore['user_type'] = 'driver';
+		}else{
+			$dataToStore['user_type'] = 'customer';
+		}
 
 		//----- Validate infomations ----------------------------------------------
 		$erros = UserValidator::validateDataToCreateUser($dataToStore);
@@ -73,7 +87,6 @@ class UserDomain{
 		}
 
         //----- Try to load the record -------------------------------------------
-
 		$storeObject = User::find($id);
 		if(!$storeObject){
 			//$strErro = "It was not possible to locale the record of code number {$id}";
@@ -88,15 +101,14 @@ class UserDomain{
      * Update the specified resource in storage.
      */
 	public function update(string $id , array $data = []){
-		$id = (int) $id;
 
+		$id = (int) $id;
 		if(!($id > 0)){
 			$strErro = "The record code informaded isn't valid {$id}";
 			throw new UserException($strErro);
 		}
 
 		//----- Try to load the record -------------------------------------------
-
 		$storeObject = User::find($id);
 		if(!$storeObject){
 			$strErro = "It was not possible to locale the record of code number {$id}";
@@ -104,7 +116,6 @@ class UserDomain{
 		}
 
 		//----- Select only the necessary informations ---------------------------
-		
 		$dataToStore = [
 			'name'			=>$data['name'] 			?? $storeObject->name,
 			'email'			=>$data['email'] 			?? $storeObject->email,

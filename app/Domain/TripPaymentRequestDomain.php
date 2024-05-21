@@ -12,19 +12,15 @@ use App\Models\TripPaymentRequest;
 class TripPaymentRequestDomain{
 
 	public function index(){
-
 		//----- Select active records ---------------------------------------
 		$result = TripPaymentRequest::all();
-
 		return $result;
 	}
 
 	public function create(array $data = []){
 
-		//----- Select only the necessary informations ---------------------------
-		
+		//----- Select only the necessary informations ---------------------------		
 		$dataToTrip = $this->buildDataToStoreTripPaymentRequest($data);
-
 		//----- Validate infomations ----------------------------------------------
 		$erros = TripPaymentRequestValidator::validateDataToCreateTripPaymentRequest($dataToTrip, new TripPaymentRequest());
 		if(is_array($erros) && count($erros) > 0){
@@ -54,7 +50,6 @@ class TripPaymentRequestDomain{
 		}
 
         //----- Try to load the record -------------------------------------------
-
 		$tripPayRequesObject = TripPaymentRequest::find($id);
 		if(!$tripPayRequesObject){
 			//$strErro = "It was not possible to locale the record of code number {$id}";
@@ -89,24 +84,20 @@ class TripPaymentRequestDomain{
      */
 	public function update(string $id , array $data = []){
 		$id = (int) $id;
-
 		if(!($id > 0)){
 			$strErro = "The record code informaded isn't valid {$id}";
 			throw new TripPaymentRequestException($strErro);
 		}
 
 		//----- Try to load the record -------------------------------------------
-
 		$tripPayRequesObject = TripPaymentRequest::find($id);
 		if(!$tripPayRequesObject){
 			$strErro = "It was not possible to locale the record of code number {$id}";
 			throw new TripPaymentRequestException($strErro);
 		}
 
-		//----- Select only the necessary informations ---------------------------
-		
+		//----- Select only the necessary informations ---------------------------		
 		$dataToTrip = $this->buildDataToStoreTripPaymentRequest($data, $tripPayRequesObject);
-
 		//----- Validate infomations ----------------------------------------------
 		$erros = TripPaymentRequestValidator::validateDataToCreateTripPaymentRequest($dataToTrip);
 		if(is_array($erros) && count($erros) > 0){

@@ -8,11 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use App\Models\User;
+use App\Models\Intefaces\UserInterface;
 
-class ClientUser extends User
+class ClientUser extends User implements UserInterface
 {
-   
-    public function trip(){
-        return $this->hasMany(Trip::class, 'client_id', 'id');
-    }
+	
 }

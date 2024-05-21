@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ClientUser;
 use App\Models\DriverUser;
+use App\Models\Intefaces\UserInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Trip extends Model
 {
     use SoftDeletes, HasFactory;
-    
+
     protected $table 	= 'trips';
     protected $fillable 	= [
     	'id',

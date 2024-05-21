@@ -4,8 +4,7 @@ namespace App\Builder;
 
 abstract class Builder{
 	protected string $httpStateCode;
-	protected $data;
-	protected $state;
+	protected array $httpDataResponseRequest;
 
 
 	public function getHttpResponseCode(){
@@ -17,18 +16,20 @@ abstract class Builder{
 	}
 
 	public function setHttpResponseData($data){
-		$this->data = 	$data;
+		$this->httpDataResponseRequest['data'] = $data;
 	}
 
 	public function setHttpResponseState($state){
-		$this->state = 	$state;
+		$this->httpDataResponseRequest['state'] = $state;
 	}
 
 	public function getHttpDataResponseRequest():array{
-		return [
-			'data'   = $this->data;
-            'state'  = $this->state;
-		];
+		return $this->httpDataResponseRequest;
 	}
+
+	public function setHttpResponseDataRequest(string $key, $data){
+		$this->httpDataResponseRequest[$key] = $data;
+	}
+
 }
 

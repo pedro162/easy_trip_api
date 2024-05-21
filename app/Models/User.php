@@ -68,4 +68,12 @@ class User extends Authenticatable
     public function beneficTripPayMentRequest(){
         return $this->hasMany(Trip::class, 'user_benefic_id', 'id');
     }
+
+    public function tripAsDriver(){
+        return $this->hasMany(Trip::class, 'driver_id', 'id');
+    }
+
+    public function tripAsCustomer(){
+        return $this->hasMany(Trip::class, 'client_id', 'id');
+    }
 }
