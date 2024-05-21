@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BanckTransaction extends Model
 {
-    use HasFactory;
+    use SoftDeletes, HasFactory;
+    
     protected $table 		= 'banck_transactions';
     protected $fillable 	= [
     	'id',

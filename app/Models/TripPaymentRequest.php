@@ -8,10 +8,12 @@ use App\Models\Trip;
 use App\Models\User;
 use App\Models\ClientUser;
 use App\Models\ClientUser;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TripPaymentRequest extends Model
 {
-    use HasFactory;
+    use SoftDeletes, HasFactory;
+    
     protected $table 		= 'trip_payment_requests';
     protected $fillable 	= [
     	'id',
