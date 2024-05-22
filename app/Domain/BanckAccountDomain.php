@@ -8,6 +8,7 @@ use App\Exceptions\BankAccountException;
 use App\Models\BankAccount;
 use App\Models\BanckTransactionDomain;
 use App\Models\BanckTransaction;
+use App\Models\User;
 
 class BanckAccountDomain{
 
@@ -19,16 +20,15 @@ class BanckAccountDomain{
 		return $result;
 	}
 
-	public function create(array $data = []){
+	public function create(array $data = [], User $userObj){
 
-		//----- Select only the necessary informations ---------------------------
-		
+		//----- Select only the necessary informations ---------------------------		
 		$dataToBankAccount = [
-			'user_id'				=> $data['user_id'] 				?? '';
-			'bank_branch'			=> $data['bank_branch'] 			?? '';
-			'bank_account_number'	=> $data['bank_account_number'] 	?? '';
-			'bank_account_digit'	=> $data['bank_account_digit'] 		?? '';
-			'bank_account_balance'	=> $data['bank_account_balance'] 	?? '';
+			'user_id'				=> $userObj->id,
+			'bank_branch'			=> $data['bank_branch'] 			?? '',
+			'bank_account_number'	=> $data['bank_account_number'] 	?? '',
+			'bank_account_digit'	=> $data['bank_account_digit'] 		?? '',
+			'bank_account_balance'	=> 0,
 		];
 
 		//----- Validate infomations ----------------------------------------------
@@ -98,7 +98,7 @@ class BanckAccountDomain{
 		];
 
 		//----- Validate infomations ----------------------------------------------
-		$erros = BankAccountValidator::validateDataToCreateBankAccount($dataToBankAccount);
+		$erros = BankAccountValidator::validateDataToUpdateBankAccount($dataToBankAccount);
 		if(is_array($erros) && count($erros) > 0){
 			
 			$strErros = implode(', ', $erros);
@@ -152,11 +152,11 @@ class BanckAccountDomain{
 		$bankTransactionDomainObj 	= new BanckTransactionDomain();
 		$description 				= 'Trip cod nº '.$tripRquestObj->trip->id.' complited';
 		$transactionTypeToStore 	= BanckTransaction::getTypeIncrease();
-		$bankAccountBalanceNew 		= $bankAccountObj->bank_account_balance + $tripRquestObj->net_trip_amout
+		$bankAccountBalanceNew 		= $bankAccountObj->bank_account_balance + $tripRquestObj->net_trip_amout;
 
 		if($transactionType == 'debit'){
 			$transactionTypeToStore = BanckTransaction::getTypeDecrease();
-			$bankAccountBalanceNew 	= $bankAccountObj->bank_account_balance - $tripRquestObj->net_trip_amout
+			$bankAccountBalanceNew 	= $bankAccountObj->bank_account_balance - $tripRquestObj->net_trip_amout;
 		}
 
 		$transactionCreatedObj = $bankTransactionDomainObj->create(

@@ -27,7 +27,7 @@ class BanckTransactionDomain{
 		];
 
 		//----- Validate infomations ----------------------------------------------
-		$erros = BanckTransactionValidator::validateDataToCreateTripPaymentRequest($dataToBanckTransaction, new BanckTransaction());
+		$erros = BanckTransactionValidator::validateDataToCreateTripPaymentRequest($dataToBanckTransaction);
 		if(is_array($erros) && count($erros) > 0){
 			$strErros = implode(', ', $erros);
 			throw new BankTransactionException($strErros);

@@ -11,7 +11,7 @@ use App\Validators\UserValidator;
 class UserDomain{
 
 	protected bool $canLogin;
-	protected bool $isDriver;
+	protected bool $isDriver = false;
 
 	public function setCanLogin(bool $canLogin){
 		$this->canLogin = $canLogin;
@@ -32,7 +32,10 @@ class UserDomain{
 	}
 
 	public function index(){
+		//----- Select active records ---------------------------------------
+		$result = User::all();
 
+		return $result;
 	}
 
 	public function create(array $data){

@@ -20,8 +20,7 @@ class UserController extends Controller
         
         $objBuilder         = new UserBuilder();
         $dataToReturn       = $objBuilder->index();
-
-        $httpResposeCode = $objBuilder->getHttpResponseCode();
+        $httpResposeCode    = $objBuilder->getHttpResponseCode();
         if(!$httpResposeCode){
             $httpResposeCode = 200;
         }
@@ -38,8 +37,7 @@ class UserController extends Controller
         
         $objBuilder         = new UserBuilder();
         $dataToReturn       = $objBuilder->store($request);
-
-        $httpResposeCode = $objBuilder->getHttpResponseCode();
+        $httpResposeCode    = $objBuilder->getHttpResponseCode();
         if(!$httpResposeCode){
             $httpResposeCode = 200;
         }

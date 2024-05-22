@@ -1,4 +1,3 @@
-
 <?php 
 
 namespace App\Domain;
@@ -11,16 +10,33 @@ use App\Models\TripPaymentRequest;
 
 class TripPaymentRequestDomain{
 
+	protected const TRIP_TAX_PCT = 5;
+
 	public function index(){
 		//----- Select active records ---------------------------------------
 		$result = TripPaymentRequest::all();
 		return $result;
 	}
 
-	public function create(array $data = []){
-
+	public function create(array $data = [], Trip $tripObj){
 		//----- Select only the necessary informations ---------------------------		
-		$dataToTrip = $this->buildDataToStoreTripPaymentRequest($data);
+		$tripTax 		= $tripObj->trip_price * (self::TRIP_TAX_PCT/100);
+		$netTripAmount 	= $tripObj->trip_price - $tripTax;
+		$dataToTrip 	= $dataToTrip = [
+			'reques_description' 	=> 'Payment reques of trip '.$tripObj->id,
+			'trip_id' 				=> $tripObj->id,
+			'user_benefic_id' 		=> $tripObj->driver->id ?? null,
+			'user_equest_id' 		=> \Auth::User()->id,
+			'trip_amout' 			=> $tripObj->trip_price,
+			'trip_tax' 				=> $tripTax,
+			'net_trip_amout' 		=> $netTripAmount,
+			'request_state' 		=> 'waiting',
+			'user_canceled_id' 		=> 1,//---Torn into nulable
+			'user_approved_id' 		=> 1,//---Torn into nulable
+
+
+
+		];
 		//----- Validate infomations ----------------------------------------------
 		$erros = TripPaymentRequestValidator::validateDataToCreateTripPaymentRequest($dataToTrip, new TripPaymentRequest());
 		if(is_array($erros) && count($erros) > 0){
@@ -96,10 +112,19 @@ class TripPaymentRequestDomain{
 			throw new TripPaymentRequestException($strErro);
 		}
 
+		//$loggedUserObj = \Auth::User(); 
+
+		if(!in_array($tripPayRequesObject->request_state, ['waiting'])){
+			$strErro = "You cannot change the trip payment request informations of code number {$id}, because it's {$tripObject->trip_state}";
+			throw new TripException($strErro);
+		}
+
 		//----- Select only the necessary informations ---------------------------		
-		$dataToTrip = $this->buildDataToStoreTripPaymentRequest($data, $tripPayRequesObject);
+		$dataToTrip = $dataToTrip = [
+			'reques_description' 	=>$data['reques_description'] 	?? $tripPayRequesObject->reques_description,
+		];
 		//----- Validate infomations ----------------------------------------------
-		$erros = TripPaymentRequestValidator::validateDataToCreateTripPaymentRequest($dataToTrip);
+		$erros = TripPaymentRequestValidator::validateDataToUpdateTripPaymentRequest($dataToTrip);
 		if(is_array($erros) && count($erros) > 0){
 			
 			$strErros = implode(', ', $erros);
@@ -132,6 +157,11 @@ class TripPaymentRequestDomain{
 			throw new TripPaymentRequestException($strErro);
 		}
 		
+		if(!in_array($tripPayRequesObject->request_state, ['waiting'])){
+			$strErro = "You cannot change the trip payment request informations of code number {$id}, because it's {$tripObject->trip_state}";
+			throw new TripException($strErro);
+		}
+		
 		//---- I'm using soft delete, that's why I can do this ------------
 		$tripPayRequesObject->delete();
 
@@ -150,10 +180,8 @@ class TripPaymentRequestDomain{
 		$dataToTrip = [
 			'request_state'		=>'canceled',
 			'user_canceled_id'	=>\Auth::User()->id	?? null,
-			'canceld_at'		=>date('Y-m-d H:i:s');
+			'canceld_at'		=>date('Y-m-d H:i:s'),
 		];
-		
-
 		$tripPayRequesObject->update($dataToTrip);
 		
 		return $tripPayRequesObject;
@@ -173,7 +201,7 @@ class TripPaymentRequestDomain{
 		$dataToTrip = [
 			'request_state'		=>'approved',
 			'user_approved_id'	=>\Auth::User()->id	?? null,
-			'approved_at'		=>date('Y-m-d H:i:s');
+			'approved_at'		=>date('Y-m-d H:i:s'),
 		];
 		
 		$tripPayRequesObject->update($dataToTrip);

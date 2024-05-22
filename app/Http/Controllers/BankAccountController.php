@@ -17,9 +17,9 @@ class BankAccountController extends Controller
      */
     public function index()
     {
-        $bilderObj       = new BankAccountBuilder();
-        $dataToReturn    = $bilderObj->index();
-        $httpResposeCode = $bilderObj->getHttpResponseCode();
+        $builderObj       = new BankAccountBuilder();
+        $dataToReturn    = $builderObj->index();
+        $httpResposeCode = $builderObj->getHttpResponseCode();
         return response()->json($dataToReturn, $httpResposeCode);
     }
 
@@ -28,9 +28,17 @@ class BankAccountController extends Controller
      */
     public function store(Request $request)
     {
-        $bilderObj       = new BankAccountBuilder();
-        $dataToReturn    = $bilderObj->store($request);
-        $httpResposeCode = $bilderObj->getHttpResponseCode();
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function storeOwnerAccount(Request $request, string $owner_id)
+    {
+        $builderObj       = new BankAccountBuilder();
+        $dataToReturn    = $builderObj->storeOwnerAccount($request, $owner_id);
+        $httpResposeCode = $builderObj->getHttpResponseCode();
         return response()->json($dataToReturn, $httpResposeCode);
     }
 
@@ -39,9 +47,9 @@ class BankAccountController extends Controller
      */
     public function show(string $id)
     {
-        $bilderObj       = new BankAccountBuilder();
-        $dataToReturn    = $bilderObj->show($id);
-        $httpResposeCode = $bilderObj->getHttpResponseCode();
+        $builderObj       = new BankAccountBuilder();
+        $dataToReturn    = $builderObj->show($id);
+        $httpResposeCode = $builderObj->getHttpResponseCode();
         return response()->json($dataToReturn, $httpResposeCode);
     }
 
@@ -50,9 +58,9 @@ class BankAccountController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $bilderObj       = new BankAccountBuilder();
-        $dataToReturn    = $bilderObj->update($request, $id);
-        $httpResposeCode = $bilderObj->getHttpResponseCode();
+        $builderObj       = new BankAccountBuilder();
+        $dataToReturn    = $builderObj->update($request, $id);
+        $httpResposeCode = $builderObj->getHttpResponseCode();
         return response()->json($dataToReturn, $httpResposeCode);
     }
 
@@ -61,9 +69,9 @@ class BankAccountController extends Controller
      */
     public function destroy(string $id)
     {
-        $bilderObj       = new BankAccountBuilder();
-        $dataToReturn    = $bilderObj->destroy($id);
-        $httpResposeCode = $bilderObj->getHttpResponseCode();
+        $builderObj       = new BankAccountBuilder();
+        $dataToReturn    = $builderObj->destroy($id);
+        $httpResposeCode = $builderObj->getHttpResponseCode();
         return response()->json($dataToReturn, $httpResposeCode);
     }
 }

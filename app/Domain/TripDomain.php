@@ -32,8 +32,8 @@ class TripDomain{
 			'end_longitude'			=> $data['end_longitude'] 		?? null,
 			'driver_rate'			=> $data['driver_rate'] 		?? null,
 			'customer_rate'			=> $data['customer_rate'] 		?? null,
-			'trip_state'			=> $data['trip_state'] 			?? null,
-			'trip_price'			=> $data['trip_price'] 			?? null,
+			'trip_state'			=> 'waiting',
+			'trip_price'			=> rand(1, 100),
 		];
 
 		//----- Validate infomations ----------------------------------------------
@@ -100,24 +100,34 @@ class TripDomain{
      */
 	public function update(string $id , array $data = []){
 		$id = (int) $id;
-
 		if(!($id > 0)){
 			$strErro = "The record code informaded isn't valid {$id}";
 			throw new TripException($strErro);
 		}
 
 		//----- Try to load the record -------------------------------------------
-
-		$tripObject = Trip::find($id);
+		$tripObject = Trip::find($id);		
 		if(!$tripObject){
 			$strErro = "It was not possible to locale the record of code number {$id}";
 			throw new TripException($strErro);
 		}
 
-		//----- Select only the necessary informations ---------------------------
-		
-		$dataToTrip = $this->buildDataToStoreTrip($data, $tripObject);
+		$loggedUserObj = \Auth::User(); 
+		if(!in_array($loggedUserObj->user_type, ['customer'])){
+			$strErro = "You cannot change the trip informations of code number {$id}";
+			throw new TripException($strErro);
+		}
 
+		//----- Select only the necessary informations ---------------------------		
+		$dataToTrip = [
+			'starting_address'		=> $data['starting_address'] 	?? $tripObject->starting_address,
+			'starting_latitude'		=> $data['starting_latitude'] 	?? $tripObject->starting_latitude,
+			'starting_longitude'	=> $data['starting_longitude'] 	?? $tripObject->starting_longitude,
+			'end_address'			=> $data['end_address'] 		?? $tripObject->end_address,
+			'end_latitude'			=> $data['end_latitude'] 		?? $tripObject->end_latitude,
+			'end_longitude'			=> $data['end_longitude'] 		?? $tripObject->end_longitude,
+
+		];
 		//----- Validate infomations ----------------------------------------------
 		$erros = TripValidator::validateDataToCreateTrip($dataToTrip);
 		if(is_array($erros) && count($erros) > 0){
@@ -152,6 +162,11 @@ class TripDomain{
 			throw new TripException($strErro);
 		}
 		
+		if(!in_array($tripObject->trip_state, ['waiting', 'canceled'])){
+			$strErro = "It was not possible to cancel the trip with code number {$id}, because it's {$tripObject->trip_state}";
+			throw new TripException($strErro);
+		}
+
 		//---- I'm using soft delete, that's why I can do this ------------
 		$tripObject->delete();
 
@@ -167,9 +182,21 @@ class TripDomain{
 			throw new TripException($strErro);
 		}
 
+		$loggedUserObj = \Auth::User(); 
+		if(!in_array($loggedUserObj->user_type, ['driver'])){
+			$strErro = "You cannot start the trip of code number {$id}";
+			throw new TripException($strErro);
+		}
+
+		if(!in_array($tripObject->trip_state, ['waiting'])){
+			$strErro = "It was not possible to cancel the trip with code number {$id}, because it's {$tripObject->trip_state}";
+			throw new TripException($strErro);
+		}
+
 		//----- Update to load the record -------------------------------------------
 		$dataToTrip = [
-			'trip_state'=>'started'
+			'trip_state'=>'started',
+			'driver_id'=>$loggedUserObj->id
 		];
 		$tripObject->update($dataToTrip);
 		
@@ -184,6 +211,12 @@ class TripDomain{
 			$strErro = "It was not possible to locale the trip of code number {$id}";
 			throw new TripException($strErro);
 		}
+		
+		if(!in_array($tripObject->trip_state, ['waiting'])){
+			$strErro = "It was not possible to cancel the trip with code number {$id}, because it's {$tripObject->trip_state}";
+			throw new TripException($strErro);
+		}
+
 		//----- Update to load the record -------------------------------------------
 		$dataToTrip = [
 			'trip_state'=>'canceled'
@@ -201,6 +234,18 @@ class TripDomain{
 			$strErro = "It was not possible to locale the trip of code number {$id}";
 			throw new TripException($strErro);
 		}
+
+		$loggedUserObj = \Auth::User(); 
+		if(!in_array($loggedUserObj->user_type, ['driver'])){
+			$strErro = "You cannot start the trip of code number {$id}";
+			throw new TripException($strErro);
+		}
+
+		if(!in_array($tripObject->trip_state, ['started'])){
+			$strErro = "It was not possible to cancel the trip with code number {$id}, because it's {$tripObject->trip_state}";
+			throw new TripException($strErro);
+		}
+
 		//----- Update to load the record -------------------------------------------
 		$dataToTrip = [
 			'trip_state'=>'finished'

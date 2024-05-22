@@ -11,20 +11,29 @@ class BankAccountValidator{
 
 	public static function validateDataToCreateBankAccount(array $data = []):array{
 
-
 		$errors = [];
 		$validator = Validator::make($data, [
-			'name'=>'required|min:1|max:255',
-			'value'=>['regex:/^\d+(\.\d{1,6})?$/'],
-			'isbn'=>['regex:/^\d+$/'],
+			'bank_branch'=>['required', 'regex:/^\d+$/'],
+			'bank_account_number'=>['required', 'regex:/^\d+$/'],
+			'bank_account_digit'=>['required', 'regex:/^\d+$/'],
+			'user_id'=>['required', 'regex:/^\d+$/'],
+			'bank_account_balance'=>['required', 'regex:/^\d+(\.\d{1,6})?$/'],
 		],
 		[
-			'name.required'=>'The book name field is required',
-			'name.required'=>'The book name field needs to have at least 1 characters and a maximum 255 characters',
-			'name.required'=>'The book name field needs to have at least 1 characters and a maximum 255 characters',
+			'bank_branch.required'=>'The bank branch field is required',
+			'bank_branch.regex'=>'The bank branch field only accepts numeric values',
 
-			'value.regex'=>'The book value needs to be in a decimal format',
-			'isbn.regex'=>'The book isbn field just acept numeric values',
+			'bank_account_number.required'=>'The bank account number field is required.',
+			'bank_account_number.regex'=>'The bank account number field only accepts numeric values.',
+
+			'bank_account_digit.required'=>'The bank account digit field is required.',
+			'bank_account_digit.regex'=>'The bank account digit field only accepts numeric values.',
+
+			'user_id.required'=>'The account owner code field is required',
+			'user_id.regex'=>'The account owner code field only accepts numeric values',
+
+			'bank_account_balance.required'=>'The account balance field is required',
+			'bank_account_balance.regex'=>'The account balance field to be in a decimal format',
 		]);
 
 		if($validator->fails()){
@@ -34,4 +43,37 @@ class BankAccountValidator{
 
 		return $errors;
 	}
+
+	/**
+     * Validate the basic informations to create a new book and return an array with the errors, if they exist
+     */
+
+	public static function validateDataToUpdateBankAccount(array $data = []):array{
+
+		$errors = [];
+		$validator = Validator::make($data, [
+			'bank_branch'=>['required', 'regex:/^\d+$/'],
+			'bank_account_number'=>['required', 'regex:/^\d+$/'],
+			'bank_account_digit'=>['required', 'regex:/^\d+$/'],
+		],
+		[
+			'bank_branch.required'=>'The bank branch field is required',
+			'bank_branch.regex'=>'The bank branch field only accepts numeric values',
+
+			'bank_account_number.required'=>'The bank account number field is required.',
+			'bank_account_number.regex'=>'The bank account number field only accepts numeric values.',
+
+			'bank_account_digit.required'=>'The bank account digit field is required.',
+			'bank_account_digit.regex'=>'The bank account digit field only accepts numeric values.',
+		]);
+
+		if($validator->fails()){
+			$errorsObject = $validator->errors();
+			$errors = $errorsObject->all();
+		}
+
+		return $errors;
+	}
+
+	
 }

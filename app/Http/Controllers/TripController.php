@@ -49,10 +49,11 @@ class TripController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {       
+    {      
+        //return response()->json(['id'=>$id], 400); 
         $bilderObj       = new TripBilder();
         $dataToReturn    = $bilderObj->update($request, $id);
-        $httpResposeCode = $bilderObj->getHttpResponseCode();
+        $httpResposeCode = $bilderObj->getHttpResponseCode();        
         return response()->json($dataToReturn, $httpResposeCode);
     }
 

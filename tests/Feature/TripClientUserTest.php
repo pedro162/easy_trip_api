@@ -17,7 +17,7 @@ class TripClientUserTest extends TestCase
 	protected string $token;
 	protected $dataDriverUser;
 	protected $dataClientUser;
-
+    protected int $rand;
     /**
     * Set up the test environment.
     *
@@ -28,9 +28,11 @@ class TripClientUserTest extends TestCase
     	parent::setUp();
 
     	//---Create a user driver----------------
+        $this->rand = rand(111111,999999);
     	$dataToStore = [
-            'email' => self::USER_DRIVER_EMAIL,
+            'email' => $this->rand.'_'.self::USER_DRIVER_EMAIL,
             'password' => bcrypt(self::USER_DRIVER_PASSWORD),
+            'user_type' => 'driver',
         ];
         $userOfEmail = User::where('email', '=',trim($dataToStore['email']))->first();
 
@@ -44,8 +46,9 @@ class TripClientUserTest extends TestCase
 
 		//---Create a user customer----------------
     	$dataToStore = [
-            'email' => self::USER_CLIENT_EMAIL,
+            'email' => $this->rand.'_'.self::USER_CLIENT_EMAIL,
             'password' => bcrypt(self::USER_CLIENT_PASSWORD),
+            'user_type' => 'customer',
         ];
         $userOfEmail = User::where('email', '=',trim($dataToStore['email']))->first();
 
@@ -64,9 +67,10 @@ class TripClientUserTest extends TestCase
     */
     public function testEndpoints():void{
     	$response = $this->postJson($this->baseURL.'/login', [
-    		'email' => self::USER_CLIENT_EMAIL,
+    		'email' => $this->rand.'_'.self::USER_CLIENT_EMAIL,
             'password' => self::USER_CLIENT_PASSWORD,
     	]);
+        //$this->showRequestResponse($response);
 
     	$response->assertStatus(200);
     	$token = $response->json('token');
@@ -74,6 +78,17 @@ class TripClientUserTest extends TestCase
     	
     	// Test Trip Endpoints
         $this->testTripEndpointsToUserClient();
+        $this->logout();
+    }
+
+    private function logout(){
+        $response = $this->postJson($this->baseURL.'/logout', $this->getHttpRequestHeader());
+        $response->assertStatus(200);
+        $content    = $response->getContent(); // Get the content as a JSON string
+        $data       = json_decode($content, true); // Turn JSON String into an array
+        $data       = $data['data_user'] ?? [];
+        $this->token = ''; 
+        $this->dataDriveUserLogged = $data;
     }
 
     /**
@@ -109,16 +124,16 @@ class TripClientUserTest extends TestCase
         
         switch (trim($tripState)) {
         	case 'waiting':
+            case 'canceled':
         		$this->testDeleteTrip($trip_id);
         		break;
         	case 'finished':
-        	case 'started':
         	case 'started':
         		$this->testDeleteTripAlreadyStarted($trip_id);
         		break;
         	
         	default:
-        		$this->testDeleteTripAlreadyStarted($trip_id);
+        		$this->testDeleteTrip($trip_id);
         		break;
         }
         
@@ -155,8 +170,6 @@ class TripClientUserTest extends TestCase
 			'client_id'=> $this->dataClientUser->id,
 			'starting_address'=> 'Starting addrees example',
 			'end_address'=> 'Edding addrees example',
-			'trip_state'=> 'waiting',
-			'trip_price'=> 60,
     	], $this->getHttpRequestHeader());
     	//$this->showRequestResponse($response);
     	$response->assertStatus(201);
@@ -177,11 +190,12 @@ class TripClientUserTest extends TestCase
     * @return array
     */
     private function testUpdateTripAddress($id){
-    	$response = $this->postJson($this->baseURL.'/trip/update'. $id, [
+    	$response = $this->putJson($this->baseURL.'/trip/update/'. $id, [
 			'starting_address'=> 'Starting addrees example updated',
 			'end_address'=> 'Edding addrees example updated',
-			'trip_price'=> 60,
     	], $this->getHttpRequestHeader());
+        //print_r($this->baseURL.'/trip/update/'. $id);
+        //$this->showRequestResponse($response);
 
     	$response->assertStatus(200);
     	$content	= $response->getContent(); // Get the content as a JSON string
@@ -208,6 +222,7 @@ class TripClientUserTest extends TestCase
     */
     private function testDeleteTripAlreadyStarted($id):void{
         $response = $this->deleteJson($this->baseURL.'/trip/destroy/' . $id, $this->getHttpRequestHeader());
+        //$this->showRequestResponse($response);
         $response->assertStatus(400);
     	$this->assertDatabaseHas('trips', ['id' => $id]);
     }
@@ -220,10 +235,10 @@ class TripClientUserTest extends TestCase
     */
     private function testStartTrip($id){
 
-    	$response = $this->postJson($this->baseURL.'/trip/start'. $id, [
+    	$response = $this->putJson($this->baseURL.'/trip/start/'. $id, [
     		//add any field to update
     	], $this->getHttpRequestHeader());
-
+        //$this->showRequestResponse($response);
     	$response->assertStatus(400);
     	$content	= $response->getContent(); // Get the content as a JSON string
     	$data 		= json_decode($content, true); // Turn JSON String into an array
@@ -242,10 +257,10 @@ class TripClientUserTest extends TestCase
     */
     private function testCompliteTrip($id){
 
-    	$response = $this->postJson($this->baseURL.'/trip/complite'. $id, [
+    	$response = $this->putJson($this->baseURL.'/trip/complite/'. $id, [
     		//add any field to update
     	], $this->getHttpRequestHeader());
-
+        //$this->showRequestResponse($response);
     	$response->assertStatus(400);
     	$content	= $response->getContent(); // Get the content as a JSON string
     	$data 		= json_decode($content, true); // Turn JSON String into an array
@@ -264,7 +279,7 @@ class TripClientUserTest extends TestCase
     */
     private function testCancelTrip($id){
 
-    	$response = $this->postJson($this->baseURL.'/trip/cancel'. $id, [
+    	$response = $this->putJson($this->baseURL.'/trip/cancel/'. $id, [
 			//add any field to update
     	], $this->getHttpRequestHeader());
 
@@ -304,5 +319,10 @@ class TripClientUserTest extends TestCase
 		echo '<pre>';
 		print_r($message);
 		echo '</pre>';
+
+        /*echo 'data: ';
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';*/
     }
 }

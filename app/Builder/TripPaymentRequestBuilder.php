@@ -24,8 +24,8 @@ class TripPaymentRequestBuilder extends Builder{
 
             \DB::beginTransaction();
             
-            $storeDomainObj = new TripPaymentRequestDomain();
-            $response = $storeDomainObj->index();
+            $domainObj = new TripPaymentRequestDomain();
+            $response = $domainObj->index();
 
             \DB::commit();
 
@@ -42,7 +42,7 @@ class TripPaymentRequestBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
-            
+            //$msg  = $e->getMessage().' - '.$e->getFile().' - '.$e->getLine();
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 400;
@@ -52,7 +52,7 @@ class TripPaymentRequestBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
-
+            //$msg  = $e->getMessage().' - '.$e->getFile().' - '.$e->getLine();
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 500;
@@ -62,6 +62,7 @@ class TripPaymentRequestBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
+            //$msg  = $e->getMessage().' - '.$e->getFile().' - '.$e->getLine();
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);            
             $stCod = 500;
@@ -77,7 +78,7 @@ class TripPaymentRequestBuilder extends Builder{
 	* @param Request $request An instance of the HTTP request class.
 	* @return array The result of the processing.
 	*/
-    public function store(Request $request, string $trip_id):array
+    public function storePaymentRequestByTrip(Request $request, string $trip_id):array
     {
         $stCod = 500;
 
@@ -86,12 +87,10 @@ class TripPaymentRequestBuilder extends Builder{
             \DB::beginTransaction();
 
             $data 			= $request->all();
-            $storeDomainObj = new TripPaymentRequestDomain();
+            $domainObj      = new TripPaymentRequestDomain();
             $tripDomainObj  = new TripDomain();
-            
-            $tripObj 			= $tripDomainObj->show($trip_id);
-            $data['trip_id'] 	= $tripObj->id;
-            $response = $storeDomainObj->create($data);
+            $tripObj        = $tripDomainObj->show($trip_id);
+            $response       = $domainObj->create($data, $tripObj);
             
             \DB::commit();
 
@@ -103,7 +102,8 @@ class TripPaymentRequestBuilder extends Builder{
 
             \DB::rollback();
 
-            $msg  = $e->getMessage();            
+            $msg  = $e->getMessage();      
+            $msg  = $e->getMessage().' - '.$e->getFile().' - '.$e->getLine();      
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 400;
@@ -113,6 +113,7 @@ class TripPaymentRequestBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
+            $msg  = $e->getMessage().' - '.$e->getFile().' - '.$e->getLine();
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 500;
@@ -122,7 +123,7 @@ class TripPaymentRequestBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
-            //$msg  = $e->getMessage().' - '.$e->getLine().' - '.$e->getFile();
+            $msg  = $e->getMessage().' - '.$e->getLine().' - '.$e->getFile();
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 500;
@@ -148,8 +149,8 @@ class TripPaymentRequestBuilder extends Builder{
 
             \DB::beginTransaction();
 
-            $storeDomainObj = new TripPaymentRequestDomain();
-            $response = $storeDomainObj->show($id);
+            $domainObj = new TripPaymentRequestDomain();
+            $response = $domainObj->show($id);
 
             \DB::commit();
 
@@ -219,8 +220,8 @@ class TripPaymentRequestBuilder extends Builder{
             \DB::beginTransaction();
 
             $data 			= $request->all(); 
-            $storeDomainObj = new TripPaymentRequestDomain();
-            $response       = $storeDomainObj->update($id, $data);
+            $domainObj = new TripPaymentRequestDomain();
+            $response       = $domainObj->update($id, $data);
 
             \DB::commit();
 
@@ -277,8 +278,8 @@ class TripPaymentRequestBuilder extends Builder{
 
             \DB::beginTransaction();
             
-            $storeDomainObj = new TripPaymentRequestDomain();
-            $response       = $storeDomainObj->destroy($id);
+            $domainObj = new TripPaymentRequestDomain();
+            $response       = $domainObj->destroy($id);
 
             \DB::commit();
 
@@ -337,8 +338,8 @@ class TripPaymentRequestBuilder extends Builder{
 
             $data = $request->all();            
             
-            $storeDomainObj 		= new TripPaymentRequestDomain();
-            $tripRequestObj 		= $storeDomainObj->authorizePaymentRequest($id);
+            $domainObj 		= new TripPaymentRequestDomain();
+            $tripRequestObj 		= $domainObj->authorizePaymentRequest($id);
             $tripObj 				= $tripRequestObj->trip();
             $userBenefitObj 		= $tripRequestObj->beneficUser();
             $tripDriverObj			= $tripObj->driver();

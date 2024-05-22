@@ -15,10 +15,6 @@ class UserBuilder extends Builder{
      */
     public function index()
     {
-        $dataToReturn = [
-            'data'  => [],
-            'state' => false
-        ];
         $stCod = 200;
 
         try {
@@ -35,8 +31,8 @@ class UserBuilder extends Builder{
                 $response 	= [];
             }
 
-            $dataToReturn['data']   = $response;
-            $dataToReturn['state']  = true;
+            $this->setHttpResponseData($response);
+            $this->setHttpResponseState(true);
 
 
         } catch (StoreException $e) {
@@ -44,9 +40,8 @@ class UserBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
-            
-            $dataToReturn['data']   = $msg;
-            $dataToReturn['state']  = false;
+            $this->setHttpResponseData($msg);
+            $this->setHttpResponseState(false);
             $stCod 					= 400;
 
         }catch (\Exception $e) {
@@ -54,9 +49,8 @@ class UserBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
-
-            $dataToReturn['data']   = $msg;
-            $dataToReturn['state']  = false;
+            $this->setHttpResponseData($msg);
+            $this->setHttpResponseState(false);
             $stCod 					= 500;
 
         }catch (\Error $e) {
@@ -64,14 +58,14 @@ class UserBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
-            $dataToReturn['data']   = $msg;
-            $dataToReturn['state']  = false;
+            $this->setHttpResponseData($msg);
+            $this->setHttpResponseState(false);
             $stCod 					= 500;
             
         }
 
         $this->setHttpResponseCode($stCod);
-        return $dataToReturn;
+        return $this->getHttpDataResponseRequest();
     }
 
     /**
@@ -79,25 +73,19 @@ class UserBuilder extends Builder{
      */
     public function store(Request $request, bool $login=true)
     {
-        $dataToReturn = [
-            'data'  => [],
-            'state'=> false
-        ];
-
         $stCod = 200;
 
         try {
 
             \DB::beginTransaction();
 
-            $data = $request->all();            
-            
+            $data = $request->all();         
             $storeDomainObj = new UserDomain();
+            $storeDomainObj->setIsDriver(false);
             $response       = $storeDomainObj->create($data);
             
-            if($login){
-                $canLogin       = $storeDomainObj->getCanLogin();
-                
+            if($login){                
+                $canLogin = $storeDomainObj->getCanLogin();                
                 if($canLogin){
                     $dataToReturn   = $this->login($request);
                 }
@@ -114,9 +102,8 @@ class UserBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
-            
-            $dataToReturn['data']   = $msg;
-            $dataToReturn['state']  = false;
+            $this->setHttpResponseData($msg);
+            $this->setHttpResponseState(false);
             $stCod 					= 400;
 
         }catch (\Exception $e) {
@@ -124,9 +111,8 @@ class UserBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
-
-            $dataToReturn['data']   = $msg;
-            $dataToReturn['state']  = false;
+            $this->setHttpResponseData($msg);
+            $this->setHttpResponseState(false);
             $stCod 					= 500;
 
         }catch (\Error $e) {
@@ -135,14 +121,13 @@ class UserBuilder extends Builder{
 
             $msg  = $e->getMessage();
             //$msg  = $e->getMessage().' - '.$e->getLine().' - '.$e->getFile();
-            $dataToReturn['data']   = $msg;
-            $dataToReturn['state']  = false;
+            $this->setHttpResponseData($msg);
+            $this->setHttpResponseState(false);
             $stCod 					= 500;            
         }
 
         $this->setHttpResponseCode($stCod);
-
-        return $dataToReturn;
+        return $this->getHttpDataResponseRequest();
     }
 
     /**
@@ -388,6 +373,7 @@ class UserBuilder extends Builder{
             $this->setHttpResponseDataRequest('token', $token);
             $this->setHttpResponseDataRequest('data', 'Token created');
             $this->setHttpResponseDataRequest('status', true);
+            $this->setHttpResponseDataRequest('data_user', Auth::user());
 
             $stCod = 200;
 
@@ -396,6 +382,7 @@ class UserBuilder extends Builder{
             $this->setHttpResponseDataRequest('token', '');
             $this->setHttpResponseDataRequest('data', 'Unauthorized');
             $this->setHttpResponseDataRequest('status', false);
+            $this->setHttpResponseDataRequest('data_user', []);
 
             $stCod = 401;
         }

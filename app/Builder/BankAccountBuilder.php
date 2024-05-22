@@ -4,6 +4,7 @@ namespace App\Builder;
 
 use Illuminate\Http\Request;
 use App\Domain\BanckAccountDomain;
+use App\Domain\UserDomain;
 use App\Exceptions\BankAccountException;
 use App\Http\Controllers\Controller;
 
@@ -32,7 +33,6 @@ class BankAccountBuilder extends Builder{
                 $stCod 		= 404;
                 $response 	= [];
             }
-
             $this->setHttpResponseData($response);
             $this->setHttpResponseState(true);
 
@@ -40,7 +40,8 @@ class BankAccountBuilder extends Builder{
 
             \DB::rollback();
 
-            $msg  = $e->getMessage();            
+            $msg  = $e->getMessage();   
+            //$msg  = $e->getMessage().' - '.$e->getFile().' - '.$e->getLine();              
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 400;
@@ -50,6 +51,7 @@ class BankAccountBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
+            //$msg  = $e->getMessage().' - '.$e->getFile().' - '.$e->getLine();      
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);
             $stCod = 500;
@@ -59,23 +61,24 @@ class BankAccountBuilder extends Builder{
             \DB::rollback();
 
             $msg  = $e->getMessage();
+            //$msg  = $e->getMessage().' - '.$e->getFile().' - '.$e->getLine();      
             $this->setHttpResponseData($msg);
             $this->setHttpResponseState(false);            
             $stCod = 500;
         }
         
         $this->setHttpResponseCode($stCod);
-
-        return $dataToReturn;
+        return $this->getHttpDataResponseRequest();
     }
 
     /**
 	* Create a new bank account
 	*
+    * @param string $id The account user ID.
 	* @param Request $request An instance of the HTTP request class.
 	* @return array The result of the processing.
 	*/
-    public function store(Request $request):array
+    public function storeOwnerAccount(Request $request, string $owner_id):array
     {
         $stCod = 500;
 
@@ -84,8 +87,10 @@ class BankAccountBuilder extends Builder{
             \DB::beginTransaction();
 
             $data = $request->all();
-            $tripDomainObj = new BanckAccountDomain();
-            $response = $tripDomainObj->create($data);
+            $tripDomainObj  = new BanckAccountDomain();
+            $userDomainObj  = new UserDomain();
+            $userObj        = $userDomainObj->show($owner_id);
+            $response       = $tripDomainObj->create($data, $userObj);
             
             \DB::commit();
 
@@ -208,7 +213,8 @@ class BankAccountBuilder extends Builder{
         try {
 
             \DB::beginTransaction();
-
+            //throw new Exception("teste", 1);
+            
             $data 			= $request->all(); 
             $tripDomainObj  = new BanckAccountDomain();
             $response       = $tripDomainObj->update($id, $data);

@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Trip;
 use App\Models\User;
-use App\Models\ClientUser;
-use App\Models\ClientUser;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TripPaymentRequest extends Model

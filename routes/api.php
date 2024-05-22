@@ -16,6 +16,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::post('/user/store', 'App\Http\Controllers\UserController@store')->withoutMiddleware(['check_auth']);
+Route::post('/user/driver/store', 'App\Http\Controllers\UserController@storeDriver')->withoutMiddleware(['check_auth']);
 Route::post('/login', 'App\Http\Controllers\AuthController@login')->withoutMiddleware(['check_auth']);
 //Route::post('/logout', 'App\Http\Controllers\AuthController@logout')->middleware('auth:api');
 
@@ -28,20 +29,20 @@ Route::group(['middleware' => ['check_auth','auth:api']], function () {
 	Route::put('/trip/update/{id}', ['as' => 'trip.update', 'uses' => 'App\Http\Controllers\TripController@update']);
 	Route::get('/trip/show/{id}', ['as' => 'trip.show', 'uses' => 'App\Http\Controllers\TripController@show']);
 	Route::delete('/trip/destroy/{id}', ['as' => 'trip.destroy', 'uses' => 'App\Http\Controllers\TripController@destroy']);
-	Route::post('/trip/start/{id}', ['as' => 'trip.start', 'uses' => 'App\Http\Controllers\TripController@startTrip']);
-	Route::post('/trip/complite/{id}', ['as' => 'trip.complite', 'uses' => 'App\Http\Controllers\TripController@compliteTrip']);
-	Route::post('/trip/cancel/{id}', ['as' => 'trip.cancel', 'uses' => 'App\Http\Controllers\TripController@cancelTrip']);
+	Route::put('/trip/start/{id}', ['as' => 'trip.start', 'uses' => 'App\Http\Controllers\TripController@startTrip']);
+	Route::put('/trip/complite/{id}', ['as' => 'trip.complite', 'uses' => 'App\Http\Controllers\TripController@compliteTrip']);
+	Route::put('/trip/cancel/{id}', ['as' => 'trip.cancel', 'uses' => 'App\Http\Controllers\TripController@cancelTrip']);
 
 	//----Trip payment request routes------------------------------------------------------------------------------------------------------------------------
-	Route::get('/trip/payment/request/index', ['as' => 'trip.payment.request.index', 'uses' => 'App\Http\Controllers\BankTransactionController@index']);
-	Route::post('/trip/payment/request/store/{trip_id}', ['as' => 'trip.payment.request.store', 'uses' => 'App\Http\Controllers\BankTransactionController@store']);
-	Route::put('/trip/payment/request/update/{id}', ['as' => 'trip.payment.request.update', 'uses' => 'App\Http\Controllers\BankTransactionController@update']);
-	Route::get('/trip/payment/request/show/{id}', ['as' => 'trip.payment.request.show', 'uses' => 'App\Http\Controllers\BankTransactionController@show']);
-	Route::delete('/trip/payment/request/destroy/{id}', ['as' => 'trip.payment.request.destroy', 'uses' => 'App\Http\Controllers\BankTransactionController@destroy']);
+	Route::get('/trip/payment/request/index', ['as' => 'trip.payment.request.index', 'uses' => 'App\Http\Controllers\TripPaymentRequestController@index']);
+	Route::post('/trip/payment/request/store/{trip_id}', ['as' => 'trip.payment.request.store', 'uses' => 'App\Http\Controllers\TripPaymentRequestController@storePaymentRequestByTrip']);
+	Route::put('/trip/payment/request/update/{id}', ['as' => 'trip.payment.request.update', 'uses' => 'App\Http\Controllers\TripPaymentRequestController@update']);
+	Route::get('/trip/payment/request/show/{id}', ['as' => 'trip.payment.request.show', 'uses' => 'App\Http\Controllers\TripPaymentRequestController@show']);
+	Route::delete('/trip/payment/request/destroy/{id}', ['as' => 'trip.payment.request.destroy', 'uses' => 'App\Http\Controllers\TripPaymentRequestController@destroy']);
 
 	//----Bank Account routes------------------------------------------------------------------------------------------------------------------------
 	Route::get('/bank/account/index', ['as' => 'bank.account.index', 'uses' => 'App\Http\Controllers\BankAccountController@index']);
-	Route::post('/bank/account/store', ['as' => 'bank.account.store', 'uses' => 'App\Http\Controllers\BankAccountController@store']);
+	Route::post('/bank/account/store/{owner_id}', ['as' => 'bank.account.store', 'uses' => 'App\Http\Controllers\BankAccountController@storeOwnerAccount']);
 	Route::put('/bank/account/update/{id}', ['as' => 'bank.account.update', 'uses' => 'App\Http\Controllers\BankAccountController@update']);
 	Route::get('/bank/account/show/{id}', ['as' => 'bank.account.show', 'uses' => 'App\Http\Controllers\BankAccountController@show']);
 	Route::delete('/bank/account/destroy/{id}', ['as' => 'bank.account.destroy', 'uses' => 'App\Http\Controllers\BankAccountController@destroy']);

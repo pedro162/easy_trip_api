@@ -450,7 +450,7 @@ class TripBilder extends Builder{
             $data = $request->all();            
             
             $tripDomainObj 	= new TripDomain();
-            $tripRequestObj = $tripDomainObj->compliteTheTrip($id);
+            $tripRequestObj = $tripDomainObj->compliteTrip($id);
 
             \DB::commit();
 
