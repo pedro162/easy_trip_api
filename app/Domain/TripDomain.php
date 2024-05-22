@@ -22,18 +22,18 @@ class TripDomain{
 		//----- Select only the necessary informations ---------------------------
 		
 		$dataToTrip = $dataToTrip = [
-			'driver_id'				=> $data['driver_id'] 			?? '',
-			'client_id'				=> $data['client_id'] 			?? '',
-			'starting_address'		=> $data['starting_address'] 	?? '',
-			'starting_latitude'		=> $data['starting_latitude'] 	?? '',
-			'starting_longitude'	=> $data['starting_longitude'] 	?? '',
-			'end_address'			=> $data['end_address'] 		?? '',
-			'end_latitude'			=> $data['end_latitude'] 		?? '',
-			'end_longitude'			=> $data['end_longitude'] 		?? '',
-			'driver_rate'			=> $data['driver_rate'] 		?? '',
-			'customer_rate'			=> $data['customer_rate'] 		?? '',
-			'trip_state'			=> $data['trip_state'] 			?? '',
-			'trip_price'			=> $data['trip_price'] 			?? '',
+			'driver_id'				=> $data['driver_id'] 			?? null,
+			'client_id'				=> $data['client_id'] 			?? null,
+			'starting_address'		=> $data['starting_address'] 	?? null,
+			'starting_latitude'		=> $data['starting_latitude'] 	?? null,
+			'starting_longitude'	=> $data['starting_longitude'] 	?? null,
+			'end_address'			=> $data['end_address'] 		?? null,
+			'end_latitude'			=> $data['end_latitude'] 		?? null,
+			'end_longitude'			=> $data['end_longitude'] 		?? null,
+			'driver_rate'			=> $data['driver_rate'] 		?? null,
+			'customer_rate'			=> $data['customer_rate'] 		?? null,
+			'trip_state'			=> $data['trip_state'] 			?? null,
+			'trip_price'			=> $data['trip_price'] 			?? null,
 		];
 
 		//----- Validate infomations ----------------------------------------------
