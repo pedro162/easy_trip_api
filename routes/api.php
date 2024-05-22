@@ -28,12 +28,13 @@ Route::group(['middleware' => ['check_auth','auth:api']], function () {
 	Route::put('/trip/update/{id}', ['as' => 'trip.update', 'uses' => 'App\Http\Controllers\TripController@update']);
 	Route::get('/trip/show/{id}', ['as' => 'trip.show', 'uses' => 'App\Http\Controllers\TripController@show']);
 	Route::delete('/trip/destroy/{id}', ['as' => 'trip.destroy', 'uses' => 'App\Http\Controllers\TripController@destroy']);
-	Route::post('/trip/complite/{id}', ['as' => 'trip.complite', 'uses' => 'App\Http\Controllers\TripController@compliteTheTrip']);
-	Route::post('/trip/cancel/{id}', ['as' => 'trip.cancel', 'uses' => 'App\Http\Controllers\TripController@cancelTheTrip']);
+	Route::post('/trip/start/{id}', ['as' => 'trip.start', 'uses' => 'App\Http\Controllers\TripController@startTrip']);
+	Route::post('/trip/complite/{id}', ['as' => 'trip.complite', 'uses' => 'App\Http\Controllers\TripController@compliteTrip']);
+	Route::post('/trip/cancel/{id}', ['as' => 'trip.cancel', 'uses' => 'App\Http\Controllers\TripController@cancelTrip']);
 
 	//----Trip payment request routes------------------------------------------------------------------------------------------------------------------------
 	Route::get('/trip/payment/request/index', ['as' => 'trip.payment.request.index', 'uses' => 'App\Http\Controllers\BankTransactionController@index']);
-	Route::post('/trip/payment/request/store', ['as' => 'trip.payment.request.store', 'uses' => 'App\Http\Controllers\BankTransactionController@store']);
+	Route::post('/trip/payment/request/store/{trip_id}', ['as' => 'trip.payment.request.store', 'uses' => 'App\Http\Controllers\BankTransactionController@store']);
 	Route::put('/trip/payment/request/update/{id}', ['as' => 'trip.payment.request.update', 'uses' => 'App\Http\Controllers\BankTransactionController@update']);
 	Route::get('/trip/payment/request/show/{id}', ['as' => 'trip.payment.request.show', 'uses' => 'App\Http\Controllers\BankTransactionController@show']);
 	Route::delete('/trip/payment/request/destroy/{id}', ['as' => 'trip.payment.request.destroy', 'uses' => 'App\Http\Controllers\BankTransactionController@destroy']);

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             
             $table->enum('user_type', ['driver', 'customer'])->nullable(false)->default('driver');
-            $table->string('license_plate', 1000)->nullable();
+            $table->string('license_plate', 1000)->nullable(true)->default(null);
             $table->decimal('driver_rate', 60,6)->nullable(true)->default(null)->comment('How nice is this customer');
             $table->decimal('customer_rate', 60,6)->nullable(true)->default(null)->comment('How nice is this driver');
         });

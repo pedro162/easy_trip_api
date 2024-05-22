@@ -145,7 +145,25 @@ class TripDomain{
 		return true;
     }
 
-    public function cancelTheTrip(string $id, array $data=[]){
+    public function startTrip(string $id, array $data=[]){
+
+    	//----- Try to load the trip record -------------------------------------------
+        $tripObject = Trip::find($id);
+		if(!$tripObject){
+			$strErro = "It was not possible to locale the trip of code number {$id}";
+			throw new TripException($strErro);
+		}
+		
+		//----- Update to load the record -------------------------------------------
+		$dataToTrip = [
+			'trip_state'=>'started'
+		];
+		$tripObject->update($dataToTrip);
+		
+		return $tripObject;
+    }
+
+    public function cancelTrip(string $id, array $data=[]){
 
     	//----- Try to load the trip record -------------------------------------------
         $tripObject = Trip::find($id);
@@ -162,7 +180,7 @@ class TripDomain{
 		return $tripObject;
     }
 
-    public function compliteTheTrip(string $id, array $data=[]){
+    public function compliteTrip(string $id, array $data=[]){
 
     	//----- Try to load the trip record -------------------------------------------
         $tripObject = Trip::find($id);

@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('user_id')->unsigned()->comment('The user id belongs to this bank account');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('bank_branch', 1000)->nullable();
-            $table->string('bank_account_number', 1000)->nullable();
-            $table->string('bank_account_digit', 1000)->nullable();
+            $table->string('bank_branch', 1000)->nullable()->default(null);
+            $table->string('bank_account_number', 1000)->nullable()->default(null);
+            $table->string('bank_account_digit', 1000)->nullable()->default(null);
             $table->decimal('bank_account_balance', 60,6)->nullable(true)->default(null);
             $table->softDeletes();
             $table->timestamps();

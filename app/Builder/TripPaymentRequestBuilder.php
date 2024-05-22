@@ -5,6 +5,7 @@ namespace App\Builder;
 use Illuminate\Http\Request;
 use App\Domain\TripPaymentRequestDomain;
 use App\Domain\BanckAccountDomain;
+use App\Domain\TripDomain;
 use App\Exceptions\TripPaymentRequestException;
 use App\Http\Controllers\Controller;
 
@@ -77,7 +78,7 @@ class TripPaymentRequestBuilder extends Builder{
 	* @param Request $request An instance of the HTTP request class.
 	* @return array The result of the processing.
 	*/
-    public function store(Request $request):array
+    public function store(Request $request, string $trip_id):array
     {
         $stCod = 500;
 
@@ -87,7 +88,11 @@ class TripPaymentRequestBuilder extends Builder{
 
             $data 			= $request->all();
             $storeDomainObj = new TripPaymentRequestDomain();
-            $response 		= $storeDomainObj->create($data);
+            $tripDomainObj  = new TripDomain();
+            
+            $tripObj 			= $tripDomainObj->show($trip_id);
+            $data['trip_id'] 	= $tripObj->id;
+            $response = $storeDomainObj->create($data);
             
             \DB::commit();
 

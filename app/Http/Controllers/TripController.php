@@ -70,10 +70,19 @@ class TripController extends Controller
     /**
      * Complite the specified trip in storage.
      */
-    public function compliteTheTrip(Request $request, string $id)
+    public function startTrip(Request $request, string $id)
     {       
         $bilderObj       = new TripBilder();
-        $dataToReturn    = $bilderObj->compliteTheTrip($request, $id);
+        $dataToReturn    = $bilderObj->startTrip($request, $id);
+        $httpResposeCode = $bilderObj->getHttpResponseCode();
+        return response()->json($dataToReturn, $httpResposeCode);
+    }/**
+     * Complite the specified trip in storage.
+     */
+    public function compliteTrip(Request $request, string $id)
+    {       
+        $bilderObj       = new TripBilder();
+        $dataToReturn    = $bilderObj->compliteTrip($request, $id);
         $httpResposeCode = $bilderObj->getHttpResponseCode();
         return response()->json($dataToReturn, $httpResposeCode);
     }
@@ -81,10 +90,10 @@ class TripController extends Controller
     /**
      * Cancel the specified trip in storage.
      */
-    public function cancelTheTrip(Request $request, string $id)
+    public function cancelTrip(Request $request, string $id)
     {       
         $bilderObj       = new TripBilder();
-        $dataToReturn    = $bilderObj->cancelTheTrip($request, $id);
+        $dataToReturn    = $bilderObj->cancelTrip($request, $id);
         $httpResposeCode = $bilderObj->getHttpResponseCode();
         return response()->json($dataToReturn, $httpResposeCode);
     }

@@ -26,10 +26,10 @@ class TripPaymentRequestController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, string $trip_id)
     {        
         $bilderObj       = new TripPaymentRequestBuilder();
-        $dataToReturn    = $bilderObj->store($request);
+        $dataToReturn    = $bilderObj->store($request, $trip_id);
         $httpResposeCode = $bilderObj->getHttpResponseCode();
         return response()->json($dataToReturn, $httpResposeCode);
     }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('banck_transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('transacion_description', 1000)->nullable();
+            $table->string('transacion_description', 1000)->nullable(true)->default(null);
             $table->bigInteger('trip_pay_req_id')->unsigned()->comment('The Tryp payment request ID');
             $table->foreign('trip_pay_req_id')->references('id')->on('trips')->onUpdate('cascade')->onDelete('cascade');
             $table->bigInteger('bank_account_id')->unsigned();

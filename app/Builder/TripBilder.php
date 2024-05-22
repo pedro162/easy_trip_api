@@ -313,14 +313,14 @@ class TripBilder extends Builder{
     }
 
 
-    /**
-	* Cancel the specified trip
+	/**
+	* Start the specified trip
 	*
 	* @param Request $request An instance of the HTTP request class.
 	* @param string $id The trip ID.
 	* @return array The result of the processing.
 	*/
-    public function cancelTheTrip(Request $request, string $id):array
+    public function startTrip(Request $request, string $id):array
     {
         $stCod = 200;
 
@@ -331,7 +331,67 @@ class TripBilder extends Builder{
             $data = $request->all();            
             
             $tripDomainObj 	= new TripDomain();
-            $tripRequestObj = $tripDomainObj->cancelTheTrip($id);
+            $tripRequestObj = $tripDomainObj->startTrip($id);
+
+            \DB::commit();
+
+            $this->setHttpResponseData($tripRequestObj);
+            $this->setHttpResponseState(true);
+
+        } catch (TripException $e) {
+
+            \DB::rollback();
+
+            $msg  = $e->getMessage();
+            
+            $this->setHttpResponseData($msg);
+            $this->setHttpResponseState(false);
+            $stCod = 400;
+
+        }catch (\Exception $e) {
+
+            \DB::rollback();
+
+            $msg  = $e->getMessage();
+
+            $this->setHttpResponseData($msg);
+            $this->setHttpResponseState(false);
+            $stCod = 500;
+
+        }catch (\Error $e) {
+
+            \DB::rollback();
+
+            $msg  = $e->getMessage();
+            $this->setHttpResponseData($msg);
+            $this->setHttpResponseState(false);
+            $stCod = 500;
+            
+        }
+
+        $this->setHttpResponseCode($stCod);
+        return $this->getHttpDataResponseRequest();
+    }
+
+    /**
+	* Cancel the specified trip
+	*
+	* @param Request $request An instance of the HTTP request class.
+	* @param string $id The trip ID.
+	* @return array The result of the processing.
+	*/
+    public function cancelTrip(Request $request, string $id):array
+    {
+        $stCod = 200;
+
+        try {
+
+            \DB::beginTransaction();
+
+            $data = $request->all();            
+            
+            $tripDomainObj 	= new TripDomain();
+            $tripRequestObj = $tripDomainObj->cancelTrip($id);
 
             \DB::commit();
 
@@ -380,7 +440,7 @@ class TripBilder extends Builder{
 	* @param string $id The trip ID.
 	* @return array The result of the processing.
 	*/
-    public function compliteTheTrip(Request $request, string $id):array
+    public function compliteTrip(Request $request, string $id):array
     {
         $stCod = 200;
 
