@@ -124,7 +124,7 @@ class TripDriverUserTest extends TestCase
     }
 
     private function testShowTrip($id){
-    	$response = $this->getJson($this->urlBase.'/trip/show/' . $id, [
+    	$response = $this->getJson($this->baseURL.'/trip/show/' . $id, [
             'Authorization' => 'Bearer ' . $token,
         ]);
         $response->assertStatus(200);
@@ -181,14 +181,14 @@ class TripDriverUserTest extends TestCase
 
     private function testDeleteTrip($id){
     	// Test deleting a specific trip
-        $response = $this->deleteJson($this->urlBase.'/trip/destroy/' . $id, $this->getHttpRequestHeader());
+        $response = $this->deleteJson($this->baseURL.'/trip/destroy/' . $id, $this->getHttpRequestHeader());
         $response->assertStatus(400);
     	$this->assertSoftDeleted('trips', ['id' => $id]);
     }
 
     private function testDeleteTripAlreadyStarted($id){
     	// Test deleting a specific trip
-        $response = $this->deleteJson($this->urlBase.'/trip/destroy/' . $id, $this->getHttpRequestHeader());
+        $response = $this->deleteJson($this->baseURL.'/trip/destroy/' . $id, $this->getHttpRequestHeader());
     	$this->assertSoftDeleted('trips', ['id' => $id]);
         $response->assertStatus(400);
     }

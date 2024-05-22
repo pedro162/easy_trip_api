@@ -130,7 +130,7 @@ class TripClientUserTest extends TestCase
     * @return array
     */
     private function testShowTrip($id){
-    	$response = $this->getJson($this->urlBase.'/trip/show/' . $id, $this->getHttpRequestHeader());
+    	$response = $this->getJson($this->baseURL.'/trip/show/' . $id, $this->getHttpRequestHeader());
         $response->assertStatus(200);
 
     	$content 	= $response->getContent(); // Get the content as a JSON string
@@ -195,7 +195,7 @@ class TripClientUserTest extends TestCase
 
     private function testDeleteTrip($id){
     	// Test deleting a specific trip
-        $response = $this->deleteJson($this->urlBase.'/trip/destroy/' . $id, $this->getHttpRequestHeader());
+        $response = $this->deleteJson($this->baseURL.'/trip/destroy/' . $id, $this->getHttpRequestHeader());
         $response->assertStatus(200);
     	$this->assertSoftDeleted('trips', ['id' => $id]);
     }
@@ -207,7 +207,7 @@ class TripClientUserTest extends TestCase
     * @return void
     */
     private function testDeleteTripAlreadyStarted($id):void{
-        $response = $this->deleteJson($this->urlBase.'/trip/destroy/' . $id, $this->getHttpRequestHeader());
+        $response = $this->deleteJson($this->baseURL.'/trip/destroy/' . $id, $this->getHttpRequestHeader());
         $response->assertStatus(400);
     	$this->assertDatabaseHas('trips', ['id' => $id]);
     }
