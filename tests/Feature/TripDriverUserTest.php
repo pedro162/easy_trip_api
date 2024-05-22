@@ -85,6 +85,7 @@ class TripDriverUserTest extends TestCase
     private function testTripEndpointsToUserDriver(){
 
     	$response = $this->getJson($this->baseURL.'/trip/index',$this->getHttpRequestHeader());
+    	//$this->showRequestResponse($response);
     	$response->assertStatus(200);
 
     	//Teste creating a new trip

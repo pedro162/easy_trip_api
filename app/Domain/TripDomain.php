@@ -21,7 +21,20 @@ class TripDomain{
 
 		//----- Select only the necessary informations ---------------------------
 		
-		$dataToTrip = $this->buildDataToStoreTrip($data);
+		$dataToTrip = $dataToTrip = [
+			'driver_id'				=> $data['driver_id'] 			?? '',
+			'client_id'				=> $data['client_id'] 			?? '',
+			'starting_address'		=> $data['starting_address'] 	?? '',
+			'starting_latitude'		=> $data['starting_latitude'] 	?? '',
+			'starting_longitude'	=> $data['starting_longitude'] 	?? '',
+			'end_address'			=> $data['end_address'] 		?? '',
+			'end_latitude'			=> $data['end_latitude'] 		?? '',
+			'end_longitude'			=> $data['end_longitude'] 		?? '',
+			'driver_rate'			=> $data['driver_rate'] 		?? '',
+			'customer_rate'			=> $data['customer_rate'] 		?? '',
+			'trip_state'			=> $data['trip_state'] 			?? '',
+			'trip_price'			=> $data['trip_price'] 			?? '',
+		];
 
 		//----- Validate infomations ----------------------------------------------
 		$erros = TripValidator::validateDataToCreateTrip($dataToTrip, new Trip());
@@ -153,7 +166,7 @@ class TripDomain{
 			$strErro = "It was not possible to locale the trip of code number {$id}";
 			throw new TripException($strErro);
 		}
-		
+
 		//----- Update to load the record -------------------------------------------
 		$dataToTrip = [
 			'trip_state'=>'started'

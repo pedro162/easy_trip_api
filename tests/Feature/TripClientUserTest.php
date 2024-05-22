@@ -85,6 +85,7 @@ class TripClientUserTest extends TestCase
     private function testTripEndpointsToUserClient():void{
 
     	$response = $this->getJson($this->baseURL.'/trip/index',$this->getHttpRequestHeader());
+    	//$this->showRequestResponse($response);
     	$response->assertStatus(200);
 
     	//Teste creating a new trip
@@ -157,7 +158,7 @@ class TripClientUserTest extends TestCase
 			'trip_state'=> 'waiting',
 			'trip_price'=> 60,
     	], $this->getHttpRequestHeader());
-
+    	//$this->showRequestResponse($response);
     	$response->assertStatus(201);
 
     	$content 	= $response->getContent(); // Get the content as a JSON string

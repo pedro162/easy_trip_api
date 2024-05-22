@@ -71,7 +71,6 @@ class UserBuilder extends Builder{
         }
 
         $this->setHttpResponseCode($stCod);
-
         return $dataToReturn;
     }
 

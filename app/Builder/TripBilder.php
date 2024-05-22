@@ -33,7 +33,7 @@ class TripBilder extends Builder{
                 $stCod 		= 404;
                 $response 	= [];
             }
-
+            
             $this->setHttpResponseData($response);
             $this->setHttpResponseState(true);
 
@@ -65,9 +65,8 @@ class TripBilder extends Builder{
             $stCod = 500;
         }
         
-        $this->setHttpResponseCode($stCod);
-
-        return $dataToReturn;
+        $this->setHttpResponseCode($stCod);        
+        return $this->getHttpDataResponseRequest();
     }
 
     /**
