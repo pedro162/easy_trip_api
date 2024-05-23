@@ -423,8 +423,10 @@ Para autenticar-se na API, utilize o endpoint de login do Laravel Passport com G
 
 ## Referências
 
-Para mais detalhes sobre o desafio técnico, consulte o documento a seguir
-![Desafio Técnico - Gerador de Corridas.pdfx](Desafio Técnico - Gerador de Corridas.pdf).
+Para mais detalhes sobre o desafio técnico, consulte o documento a seguir:
+
+[Desafio Técnico - Gerador de Corridas.pdf](Desafio_Tecnico_Gerador_de_Corridas.pdf)
+
 
 ## Notas Adicionais
 
