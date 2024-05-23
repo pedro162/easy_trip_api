@@ -31,8 +31,8 @@ class TripPaymentRequestDomain{
 			'trip_tax' 				=> $tripTax,
 			'net_trip_amout' 		=> $netTripAmount,
 			'request_state' 		=> 'waiting',
-			'user_canceled_id' 		=> 1,//---Torn into nulable
-			'user_approved_id' 		=> 1,//---Torn into nulable
+			'user_canceled_id' 		=> null,//---Turn into nulable
+			'user_approved_id' 		=> null,//---Turn into nulable
 
 
 
