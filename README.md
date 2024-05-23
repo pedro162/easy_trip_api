@@ -62,7 +62,13 @@ Cada corrida possui um percentual de taxa e o valor da corrida é gerado aleator
     docker-compose exec app php artisan migrate
     ```
 
-7. **Iniciar o Servidor:**
+
+7. **Caso seja necessário liberar permissões no diretório storage:**
+    ```bash
+    docker-compose exec app chown -R www-data:www-data /var/www/html/easy_trip_api/storage
+    ```
+
+8. **Iniciar o Servidor:**
     - A aplicação estará disponível em `http://localhost:9000`.
 
 ## Autenticação e Recursos da API
