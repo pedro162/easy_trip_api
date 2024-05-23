@@ -72,72 +72,72 @@ Cada corrida possui um percentual de taxa e o valor da corrida é gerado aleator
 Para autenticar-se na API, utilize o endpoint de login do Laravel Passport com Grant Type Password. As credenciais do usuário devem ser enviadas para obter o token de acesso.
 
 - **Login:**
-  - `POST: /login`
+  - `POST: /api/login`
 - **Logout:**
-  - `POST: /logout`
+  - `POST: /api/logout`
 
 ### Recursos da API
 
 #### Usuário
 
 - Criar novo usuário do tipo cliente:
-  - `POST: /user/store`
+  - `POST: /api/user/store`
 - Criar novo usuário do tipo motorista:
-  - `POST: /user/driver/store`
+  - `POST: /api/user/driver/store`
 - Outras rotas de usuário:
   - Listar usuários:
-    - `GET: /user/index`
+    - `GET: /api/user/index`
   - Atualizar usuário:
-    - `PUT: /user/update/{id}`
+    - `PUT: /api/user/update/{id}`
   - Mostrar usuário:
-    - `GET: /user/show/{id}`
+    - `GET: /api/user/show/{id}`
   - Deletar usuário:
-    - `DELETE: /user/destroy/{id}`
+    - `DELETE: /api/user/destroy/{id}`
 
 #### Viagem
 
 - Listar viagens:
-  - `GET: /trip/index`
+  - `GET: /api/trip/index`
 - Criar nova viagem:
-  - `POST: /trip/store`
+  - `POST: /api/trip/store`
 - Atualizar viagem:
-  - `PUT: /trip/update/{id}`
+  - `PUT: /api/trip/update/{id}`
 - Mostrar viagem:
-  - `GET: /trip/show/{id}`
+  - `GET: /api/trip/show/{id}`
 - Deletar viagem:
-  - `DELETE: /trip/destroy/{id}`
+  - `DELETE: /api/trip/destroy/{id}`
 - Iniciar viagem:
-  - `PUT: /trip/start/{id}`
+  - `PUT: /api/trip/start/{id}`
 - Concluir viagem:
-  - `PUT: /trip/complete/{id}`
+  - `PUT: /api/trip/complete/{id}`
 - Cancelar viagem:
-  - `PUT: /trip/cancel/{id}`
+  - `PUT: /api/trip/cancel/{id}`
 
 #### Pagamento
 
 - Listar solicitações de pagamento:
-  - `GET: /trip/payment/request/index`
+  - `GET: /api/trip/payment/request/index`
 - Criar solicitação de pagamento:
-  - `POST: /trip/payment/request/store/{trip_id}`
+  - `POST: /api/trip/payment/request/store/{trip_id}`
 - Atualizar solicitação de pagamento:
-  - `PUT: /trip/payment/request/update/{id}`
+  - `PUT: /api/trip/payment/request/update/{id}`
 - Mostrar solicitação de pagamento:
-  - `GET: /trip/payment/request/show/{id}`
+  - `GET: /api/trip/payment/request/show/{id}`
 - Deletar solicitação de pagamento:
-  - `DELETE: /trip/payment/request/destroy/{id}`
+  - `DELETE: /api/trip/payment/request/destroy/{id}`
 
 #### Conta Bancária
 
 - Listar contas bancárias:
-  - `GET: /bank/account/index`
+  - `GET: /api/bank/account/index`
 - Criar conta bancária:
-  - `POST: /bank/account/store/{owner_id}`
+  - `POST: /api/bank/account/store/{owner_id}`
 - Atualizar conta bancária:
-  - `PUT: /bank/account/update/{id}`
+  - `PUT: /api/bank/account/update/{id}`
 - Mostrar conta bancária:
-  - `GET: /bank/account/show/{id}`
+  - `GET: /api/bank/account/show/{id}`
 - Deletar conta bancária:
-  - `DELETE: /bank/account/destroy/{id}`
+  - `DELETE: /api/bank/account/destroy/{id}`
 
 ## Exemplos de Uso
 
